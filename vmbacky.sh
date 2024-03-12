@@ -62,18 +62,6 @@ function backup {
     fi
 }
 
-#if [ -z $1 ] || [ -z $2 ]; then
-#        echo "Usage: $0 [pool] [image]"
-#        exit 1
-#else
-#        rbd snap ls "$1"/"$2" > /dev/null 2>&1
-#        if [ "$?" != "0" ]; then
-#                echo "Cannot find rbd image $1/$2."
-#                exit 2
-#        fi
-#        backup "$1" "$2"
-#fi
-
 for image in $(rbd ls $SOURCEPOOL)
 do
 	backup "$SOURCEPOOL" "$image"
@@ -131,16 +119,6 @@ backy2 cleanup
 mkdir /cephfs/vmbacky-pg/.snap/snap
 rsync -aHhXxS --delete /cephfs/vmbacky-pg/.snap/snap/ /mnt/vmbackup/postgres/
 rmdir /cephfs/vmbacky-pg/.snap/snap
-#server=10.1.1.220
-#echo "Synchronizing with $server"
-#if nc -z $server 22 2>/dev/null; then
-#    echo "$server ✓"
-#    mount /mnt
-#    systemctl stop postgresql
-#    rsync -aHhXS --delete /belta/vmbackup/ /mnt/vmbackup/
-#    systemctl start postgresql
-#else
-#    echo "$server ✗. Sync aborted"
-#fi
+
 date
 echo Job ended.
